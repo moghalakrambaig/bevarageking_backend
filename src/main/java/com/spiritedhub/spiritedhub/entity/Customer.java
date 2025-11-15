@@ -3,6 +3,8 @@ package com.spiritedhub.spiritedhub.entity;
 import jakarta.persistence.*;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
@@ -43,7 +45,7 @@ public class Customer {
 
     // ✅ Add these for Forgot Password functionality
     private String resetPasswordToken;
-    private Instant resetPasswordExpiry;
+    private LocalDateTime resetPasswordExpiry;
 
     // ======================
     // Getters and Setters
@@ -185,11 +187,11 @@ public class Customer {
         this.resetPasswordToken = resetPasswordToken;
     }
 
-    public Instant getResetPasswordExpiry() {
+    public LocalDateTime getResetPasswordExpiry() {
         return resetPasswordExpiry;
     }
 
-    public void setResetPasswordExpiry(Instant resetPasswordExpiry) {
+    public void setResetPasswordExpiry(LocalDateTime resetPasswordExpiry) {
         this.resetPasswordExpiry = resetPasswordExpiry;
     }
 }

@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -45,7 +45,7 @@ public class AuthController {
             Admin admin = adminOpt.get();
             String token = UUID.randomUUID().toString();
             admin.setResetPasswordToken(token);
-            admin.setResetPasswordExpiry(Instant.now().plusSeconds(3600)); // 1 hour
+            admin.setResetPasswordExpiry(LocalDateTime.now().plusSeconds(3600)); // 1 hour
             adminRepository.save(admin);
 
             String resetLink = frontendUrl + "/reset-password?token=" + token;
@@ -59,7 +59,7 @@ public class AuthController {
             Customer customer = customerOpt.get();
             String token = UUID.randomUUID().toString();
             customer.setResetPasswordToken(token);
-            customer.setResetPasswordExpiry(Instant.now().plusSeconds(3600)); // 1 hour
+            customer.setResetPasswordExpiry(LocalDateTime.now().plusSeconds(3600)); // 1 hour
             customerRepository.save(customer);
 
             String resetLink = frontendUrl + "/reset-password?token=" + token;
@@ -81,7 +81,7 @@ public class AuthController {
         Optional<Admin> adminOpt = adminRepository.findByResetPasswordToken(token);
         if (adminOpt.isPresent()) {
             Admin admin = adminOpt.get();
-            if (admin.getResetPasswordExpiry().isBefore(Instant.now())) {
+            if (admin.getResetPasswordExpiry().isBefore(LocalDateTime.now())) {
                 return ResponseEntity.ok(Map.of("message", "Token has expired"));
             }
             admin.setPassword(passwordEncoder.encode(newPassword));
@@ -95,7 +95,7 @@ public class AuthController {
         Optional<Customer> customerOpt = customerRepository.findByResetPasswordToken(token);
         if (customerOpt.isPresent()) {
             Customer customer = customerOpt.get();
-            if (customer.getResetPasswordExpiry().isBefore(Instant.now())) {
+            if (customer.getResetPasswordExpiry().isBefore(LocalDateTime.now())) {
                 return ResponseEntity.ok(Map.of("message", "Token has expired"));
             }
             customer.setPassword(passwordEncoder.encode(newPassword));

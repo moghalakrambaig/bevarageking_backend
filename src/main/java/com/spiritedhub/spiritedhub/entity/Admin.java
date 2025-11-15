@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "admin")
@@ -15,7 +16,7 @@ public class Admin {
 
     // New fields for password reset
     private String resetPasswordToken;
-    private Instant resetPasswordExpiry;
+    private LocalDateTime resetPasswordExpiry;
 
     // ===== Getters & Setters =====
     public String getEmail() {
@@ -42,11 +43,11 @@ public class Admin {
         this.resetPasswordToken = resetPasswordToken;
     }
 
-    public Instant getResetPasswordExpiry() {
+    public LocalDateTime getResetPasswordExpiry() {
         return resetPasswordExpiry;
     }
 
-    public void setResetPasswordExpiry(Instant resetPasswordExpiry) {
+    public void setResetPasswordExpiry(LocalDateTime resetPasswordExpiry) {
         this.resetPasswordExpiry = resetPasswordExpiry;
     }
 }
