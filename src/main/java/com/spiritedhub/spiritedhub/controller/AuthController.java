@@ -31,9 +31,8 @@ public class AuthController {
 
     @Autowired
     private EmailService emailService;
-
-    @Value("${app.frontend.url}")
-    private String frontendUrl;
+    
+    private String frontendUrl = "https://beverageking.vercel.app";
 
     // ================= Forgot Password =================
     @PostMapping("/forgot-password")
