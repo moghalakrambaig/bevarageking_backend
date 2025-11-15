@@ -6,6 +6,7 @@ import com.spiritedhub.spiritedhub.repository.AdminRepository;
 import com.spiritedhub.spiritedhub.repository.CustomerRepository;
 import com.spiritedhub.spiritedhub.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +32,9 @@ public class AuthController {
     @Autowired
     private EmailService emailService;
 
+    @Value("${app.frontend.url}")
+    private String frontendUrl;
+
     // ================= Forgot Password =================
     @PostMapping("/forgot-password")
     public ResponseEntity<Map<String, String>> forgotPassword(@RequestBody Map<String, String> request) {
@@ -45,7 +49,7 @@ public class AuthController {
             admin.setResetPasswordExpiry(Instant.now().plusSeconds(3600)); // 1 hour
             adminRepository.save(admin);
 
-            String resetLink = "http://localhost:8080/reset-password?token=" + token;
+            String resetLink = frontendUrl + "/reset-password?token=" + token;
             emailService.sendEmail(admin.getEmail(), "Admin Password Reset",
                     "Click this link to reset your admin password: " + resetLink);
         }
@@ -59,7 +63,7 @@ public class AuthController {
             customer.setResetPasswordExpiry(Instant.now().plusSeconds(3600)); // 1 hour
             customerRepository.save(customer);
 
-            String resetLink = "http://localhost:8080/reset-password?token=" + token;
+            String resetLink = frontendUrl + "/reset-password?token=" + token;
             emailService.sendEmail(customer.getEmail(), "Customer Password Reset",
                     "Click this link to reset your customer account password: " + resetLink);
         }

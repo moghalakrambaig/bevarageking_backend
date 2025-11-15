@@ -26,36 +26,33 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable())
-            .cors(cors -> cors.configurationSource(request -> {
-                var config = new org.springframework.web.cors.CorsConfiguration();
-                config.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:8080"));
-                config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-                config.setAllowedHeaders(List.of("*"));
-                config.setAllowCredentials(true);
-                return config;
-            }))
-            // Use session management
-            .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
-            .authorizeHttpRequests(auth -> auth
-                // Public endpoints
-                .requestMatchers("/api/auth/**", "/api/customers/**").permitAll()
-                // All other requests need authentication
-                .anyRequest().authenticated()
-            )
-            .formLogin(form -> form
-                .loginProcessingUrl("/api/auth/signin")
-                .usernameParameter("email")
-                .passwordParameter("password")
-                .successHandler((req, res, auth) -> res.setStatus(HttpStatus.OK.value()))
-                .failureHandler((req, res, ex) -> res.setStatus(HttpStatus.UNAUTHORIZED.value()))
-            )
-            .logout(logout -> logout
-                .logoutUrl("/api/auth/logout")
-                .logoutSuccessHandler((req, res, auth) -> res.setStatus(HttpStatus.OK.value()))
-            )
-            // Return 401 for unauthenticated requests to protected endpoints
-            .exceptionHandling(e -> e.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)));
+                .csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.configurationSource(request -> {
+                    var config = new org.springframework.web.cors.CorsConfiguration();
+                    config.setAllowedOrigins(List.of("https://beverageking.vercel.app", "http://localhost:8080"));
+                    config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+                    config.setAllowedHeaders(List.of("*"));
+                    config.setAllowCredentials(true);
+                    return config;
+                }))
+                // Use session management
+                .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
+                .authorizeHttpRequests(auth -> auth
+                        // Public endpoints
+                        .requestMatchers("/api/auth/**", "/api/customers/**").permitAll()
+                        // All other requests need authentication
+                        .anyRequest().authenticated())
+                .formLogin(form -> form
+                        .loginProcessingUrl("/api/auth/signin")
+                        .usernameParameter("email")
+                        .passwordParameter("password")
+                        .successHandler((req, res, auth) -> res.setStatus(HttpStatus.OK.value()))
+                        .failureHandler((req, res, ex) -> res.setStatus(HttpStatus.UNAUTHORIZED.value())))
+                .logout(logout -> logout
+                        .logoutUrl("/api/auth/logout")
+                        .logoutSuccessHandler((req, res, auth) -> res.setStatus(HttpStatus.OK.value())))
+                // Return 401 for unauthenticated requests to protected endpoints
+                .exceptionHandling(e -> e.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)));
 
         return http.build();
     }

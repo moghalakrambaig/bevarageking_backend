@@ -112,7 +112,8 @@ public class CustomerService {
 
     private LocalDate parseDateSafe(String value) {
         try {
-            if (value == null || value.isEmpty()) return null;
+            if (value == null || value.isEmpty())
+                return null;
             return LocalDate.parse(value.trim(), DATE_FORMATTER);
         } catch (Exception e) {
             return null;
